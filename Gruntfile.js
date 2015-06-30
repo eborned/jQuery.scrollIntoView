@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         config: {
-            name: "jquery-scroll-into-view",
+            name: "jquery.scrollIntoView",
             e2ePort: 9000
         },
 
