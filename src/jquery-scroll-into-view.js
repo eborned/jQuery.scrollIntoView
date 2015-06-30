@@ -4,35 +4,52 @@
  * This override is smart enough to not scroll if the element is already visible.
  *
  * Copyright 2011 Arwid Bancewicz
+ * Copyright 2015 Eric Bus
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
  * 
  * @date 8 Jan 2013
  * @author Arwid Bancewicz http://arwid.ca
+ * @author Eric Bus
  * @version 0.3
  */
- (function($) {
+(function($) {
     $.fn.scrollIntoView = function(duration, easing, complete) {
         // The arguments are optional.
         // The first argment can be false for no animation or a duration.
         // The first argment could also be a map of options.
         // Refer to http://api.jquery.com/animate/.
-        var opts = $.extend({},
-        $.fn.scrollIntoView.defaults);
+        var opts = $.extend({}, $.fn.scrollIntoView.defaults);
 
         // Get options
-        if ($.type(duration) == "object") {
+        if ($.type(duration) === "object") {
             $.extend(opts, duration);
-        } else if ($.type(duration) == "number") {
+        } else if ($.type(duration) === "number") {
             $.extend(opts, { duration: duration, easing: easing, complete: complete });
-        } else if (duration == false) {
+        } else if (duration === false) {
             opts.smooth = false;
         }
 
         // get enclosing offsets
         var elY = Infinity, elH = 0;
-        if (this.size()==1)((elY=this.get(0).offsetTop)==null||(elH=elY+this.get(0).offsetHeight));
-        else this.each(function(i,el){(el.offsetTop<elY?elY=el.offsetTop:el.offsetTop+el.offsetHeight>elH?elH=el.offsetTop+el.offsetHeight:null)});
+        if (this.size()===1) {
+            elY = this.get(0).offsetTop;
+            if (elY !== null)
+            {
+                elH = elY + this.get(0).offsetHeight;
+            }
+        } else {
+            this.each(function(i,el) {
+                if (el.offsetTop < elY)
+                {
+                    elY = el.offsetTop;
+                }
+                else if (el.offsetTop + el.offsetHeight > elH)
+                {
+                    elH = el.offsetTop+el.offsetHeight;
+                }
+            });
+        }
         elH -= elY;
 
         // start from the common ancester
@@ -40,21 +57,36 @@
 
         var wH = $(window).height();
         
+        function scrollTo(el, _scrollTo) {
+            if (_scrollTo === undefined) {
+                if ($.isFunction(opts.complete)) {
+                    opts.complete.call(el);
+                }
+            } else if (opts.smooth) {
+                $(el).stop().animate({ scrollTop: _scrollTo }, opts);
+            } else {
+                el.scrollTop = _scrollTo;
+                if ($.isFunction(opts.complete)) {
+                    opts.complete.call(el);
+                }
+            }
+        }
+
         // go up parents until we find one that scrolls
         while (pEl) {
             var pY = pEl.scrollTop, pH = pEl.clientHeight;
-            if (pH > wH) pH = wH;
+            if (pH > wH) { pH = wH; }
             
             // case: if body's elements are all absolutely/fixed positioned, use window height
-            if (pH == 0 && pEl.tagName == "BODY") pH = wH;
+            if (pH === 0 && pEl.tagName === "BODY") { pH = wH; }
             
             if (
             // it wiggles?
-            (pEl.scrollTop != ((pEl.scrollTop += 1) == null || pEl.scrollTop) && (pEl.scrollTop -= 1) != null) ||
-            (pEl.scrollTop != ((pEl.scrollTop -= 1) == null || pEl.scrollTop) && (pEl.scrollTop += 1) != null)) {
-                if (elY <= pY) scrollTo(pEl, elY); // scroll up
-                else if ((elY + elH) > (pY + pH)) scrollTo(pEl, elY + elH - pH); // scroll down
-                else scrollTo(pEl, undefined) // no scroll
+            (pEl.scrollTop !== ((pEl.scrollTop += 1) === null || pEl.scrollTop) && (pEl.scrollTop -= 1) !== null) ||
+            (pEl.scrollTop !== ((pEl.scrollTop -= 1) === null || pEl.scrollTop) && (pEl.scrollTop += 1) !== null)) {
+                if (elY <= pY) { scrollTo(pEl, elY); } // scroll up
+                else if ((elY + elH) > (pY + pH)) { scrollTo(pEl, elY + elH - pH); } // scroll down
+                else { scrollTo(pEl, undefined); } // no scroll 
                 return;
             }
 
@@ -62,16 +94,6 @@
             pEl = pEl.parentNode;
         }
 
-        function scrollTo(el, scrollTo) {
-            if (scrollTo === undefined) {
-                if ($.isFunction(opts.complete)) opts.complete.call(el);
-            } else if (opts.smooth) {
-                $(el).stop().animate({ scrollTop: scrollTo }, opts);
-            } else {
-                el.scrollTop = scrollTo;
-                if ($.isFunction(opts.complete)) opts.complete.call(el);
-            }
-        }
         return this;
     };
 
@@ -96,7 +118,7 @@
             var pEl = this.parentNode, pY = pEl.scrollTop, pH = pEl.clientHeight, elY = this.offsetTop, elH = this.offsetHeight;
             if (completely ? (elY) > (pY + pH) : (elY + elH) > (pY + pH)) {}
             else if (completely ? (elY + elH) < pY: elY < pY) {}
-            else outOfView = false;
+            else { outOfView = false; }
         });
         return outOfView;
     };
@@ -121,17 +143,17 @@
         }
 
         // Iterate until equality is found
-        for (var i = 0; i < parents[0].length; i++) {
+        for (i = 0; i < parents[0].length; i++) {
             var equal = true;
             for (var j in parents) {
-                if (parents[j][i] != parents[0][i]) {
+                if (parents[j][i] !== parents[0][i]) {
                     equal = false;
                     break;
                 }
             }
-            if (equal) return $(parents[0][i]);
+            if (equal) { return $(parents[0][i]); }
         }
         return $([]);
-    }
+    };
 
 })(jQuery);

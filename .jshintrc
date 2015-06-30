@@ -9,10 +9,11 @@
   "undef": true,
   "boss": true,
   "eqnull": true,
-  "white": true,
   "proto": true,
   "predef": [
     "$",
+    "jQuery",
+    "window",
     "angular",
     "console"
   ]
