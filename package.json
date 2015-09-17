@@ -1,6 +1,6 @@
 {
   "name": "jquery-scroll-into-view",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "jQuery plugin to smoothly scroll elements into view.",
   "main": "dist/jquery.scrollIntoView.js",
   "directories": {
@@ -39,6 +39,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rubenv/angular-debounce.git"
+    "url": "git://github.com/Arwid/jQuery.scrollIntoView"
   }
 }

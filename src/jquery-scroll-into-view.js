@@ -10,7 +10,7 @@
  * @date 8 Jan 2013
  * @author Arwid Bancewicz http://arwid.ca
  * @author Eric Bus
- * @version 0.3.1
+ * @version 0.3.2
  */
 (function($) {
     $.fn.scrollIntoView = function(duration, easing, complete) {
