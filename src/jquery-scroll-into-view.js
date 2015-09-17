@@ -4,14 +4,13 @@
  * This override is smart enough to not scroll if the element is already visible.
  *
  * Copyright 2011 Arwid Bancewicz
- * Copyright 2015 Eric Bus
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
  * 
  * @date 8 Jan 2013
  * @author Arwid Bancewicz http://arwid.ca
  * @author Eric Bus
- * @version 0.3
+ * @version 0.3.1
  */
 (function($) {
     $.fn.scrollIntoView = function(duration, easing, complete) {
@@ -143,15 +142,17 @@
         }
 
         // Iterate until equality is found
-        for (i = 0; i < parents[0].length; i++) {
-            var equal = true;
-            for (var j in parents) {
-                if (parents[j][i] !== parents[0][i]) {
-                    equal = false;
-                    break;
+        if (parents.length) {
+            for (i = 0; i < parents[0].length; i++) {
+                var equal = true;
+                for (var j in parents) {
+                    if (parents[j][i] !== parents[0][i]) {
+                        equal = false;
+                        break;
+                    }
                 }
+                if (equal) { return $(parents[0][i]); }
             }
-            if (equal) { return $(parents[0][i]); }
         }
         return $([]);
     };
