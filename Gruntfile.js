@@ -5,7 +5,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-ngmin");
 
     grunt.initConfig({
@@ -56,7 +55,7 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: ["src/**.js", "test/*{,/*}"],
-                tasks: ["build", "karma:unit:run"]
+                tasks: ["build"]
             }
         },
 
@@ -70,24 +69,12 @@ module.exports = function (grunt) {
 
         bump: {
             options: {
-                files: ["package.json", "bower.json"],
+                files: ["package.json"],
                 commitFiles: ["-a"],
                 pushTo: "origin"
             }
-        },
-
-        karma: {
-            unit: {
-                configFile: "test/configs/unit.conf.js",
-                browsers: ["Chrome"],
-                background: true
-            },
-            unitci_firefox: {
-                configFile: "test/configs/unit.conf.js",
-                browsers: ["Firefox", "PhantomJS"],
-                singleRun: true
-            }
         }
+
     });
 
     grunt.registerTask("default", ["test"]);
